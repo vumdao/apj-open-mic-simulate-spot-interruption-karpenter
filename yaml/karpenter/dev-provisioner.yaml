@@ -1,0 +1,34 @@
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: dev
+spec:
+  provider:
+    instanceProfile: sin-eks-node-role-dev
+    amiFamily: Bottlerocket
+    tags:
+      accountingEC2Tag: karpenter
+      eks/nodegroup-name: karpenter-group
+      eks/cluster-name: sin-dev
+    subnetSelector:
+      Name: "EksCluster/EKSVpc/PrivateSubnet*"
+    securityGroupSelector:
+      kubernetes.io/cluster/sin-dev: owned
+  limits:
+    resources:
+      cpu: 4
+  requirements:
+    - key: karpenter.sh/capacity-type
+      operator: In
+      values: ["spot"]
+    - key: node.kubernetes.io/instance-type
+      operator: In
+      values: ["t3a.small", "t3.small"]
+  ttlSecondsAfterEmpty: 30
+  ttlSecondsUntilExpired: 86400 #-> 1 day
+  taints:
+    - key: dedicated
+      value: dev
+      effect: NoSchedule
+  labels:
+    deployment: dev

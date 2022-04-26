@@ -1,0 +1,11 @@
+# helm upgrade --install aws-node-termination-handler eks/aws-node-termination-handler -n kube-system --values yaml/nth/nth-values.yaml
+enableSqsTerminationDraining: true
+queueURL: "https://sqs.ap-southeast-1.amazonaws.com/123456789012/sin-nth-sqs-dev"
+awsRegion: "ap-southeast-1"
+serviceAccount:
+  create: true
+  name: aws-node-termination-handler
+  annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/sin-nth-role-dev
+checkASGTagBeforeDraining: false # <-- set to false as instances do not belong to any ASG
+enableSpotInterruptionDraining: true

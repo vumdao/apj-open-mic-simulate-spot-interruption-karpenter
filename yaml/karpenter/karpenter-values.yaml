@@ -1,0 +1,8 @@
+# helm upgrade --install --namespace karpenter --create-namespace karpenter karpenter/karpenter --version 0.9.0 --values yaml/karpenter/karpenter-values.yaml --wait
+serviceAccount:
+    create: true
+    name: "karpenter-controller"
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/sin-karpenter-role-dev
+clusterName: "sin-dev"
+clusterEndpoint: "https://32AF33A5B7B36B9AF6A88A2634904D71.gr7.ap-southeast-1.eks.amazonaws.com"
