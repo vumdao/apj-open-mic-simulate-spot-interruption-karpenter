@@ -21,12 +21,13 @@ export class EksCluster extends Stack {
       eksNodeRole.addManagedPolicy({ managedPolicyArn: `arn:aws:iam::aws:policy/${pol}` });
     }
 
-    new CfnInstanceProfile(this, `${reg.pattern}-eks-node-instance-profile-${reg.stage}`, {
+    const instanceProfile = new CfnInstanceProfile(this, `${reg.pattern}-eks-node-instance-profile-${reg.stage}`, {
       instanceProfileName: `${reg.pattern}-eks-node-role-${reg.stage}`,
       roles: [eksNodeRole.roleName]
     });
 
     new CfnOutput(this, `${reg.pattern}-eks-node-role-${reg.stage}-output`, {value: eksNodeRole.roleName});
+    new CfnOutput(this, `${reg.pattern}-eks-node-role-${reg.stage}-output`, {value: instanceProfile.instanceProfileName || ''});
 
     const eksClusterRole = new Role(this, `${reg.pattern}-eks-cluster-role-${reg.stage}`, {
       description: 'Role for Kubernetes control plane',
